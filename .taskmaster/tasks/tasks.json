@@ -209,7 +209,7 @@
         "id": "6",
         "title": "Главная: чтение транзакций, TransactionList, пустое состояние",
         "description": "Server Component загружает данные из Supabase и показывает таблицу.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "3",
           "4",
@@ -250,7 +250,8 @@
             "testStrategy": "Очистить таблицу — виден CTA.",
             "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:15:05.945Z"
       },
       {
         "id": "7",
@@ -453,9 +454,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:13:46.986Z",
+      "lastModified": "2026-05-12T17:15:05.946Z",
       "taskCount": 12,
-      "completedCount": 5,
+      "completedCount": 6,
       "tags": [
         "master"
       ]
