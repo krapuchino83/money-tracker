@@ -3,7 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
-import { transactionCreateSchema, transactionIdSchema } from "@/lib/validations/transaction";
+import {
+  transactionCreateSchema,
+  transactionIdSchema,
+  transactionUpdateSchema,
+} from "@/lib/validations/transaction";
 
 function formDataToCreateInput(formData: FormData) {
   return {
@@ -12,6 +16,13 @@ function formDataToCreateInput(formData: FormData) {
     category: formData.get("category"),
     description: formData.get("description") ?? "",
     date: formData.get("date"),
+  };
+}
+
+function formDataToUpdateInput(formData: FormData) {
+  return {
+    ...formDataToCreateInput(formData),
+    id: formData.get("id"),
   };
 }
 
@@ -31,6 +42,34 @@ export async function addTransaction(formData: FormData) {
     description,
     date: date.toISOString().slice(0, 10),
   });
+
+  if (error) {
+    return { ok: false as const, error: error.message };
+  }
+
+  revalidatePath("/");
+  return { ok: true as const };
+}
+
+export async function updateTransaction(formData: FormData) {
+  const parsed = transactionUpdateSchema.safeParse(formDataToUpdateInput(formData));
+  if (!parsed.success) {
+    return { ok: false as const, error: parsed.error.flatten().fieldErrors };
+  }
+
+  const { id, type, amount, category, description, date } = parsed.data;
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("transactions")
+    .update({
+      type,
+      amount,
+      category,
+      description,
+      date: date.toISOString().slice(0, 10),
+    })
+    .eq("id", id);
 
   if (error) {
     return { ok: false as const, error: error.message };

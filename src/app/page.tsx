@@ -1,6 +1,6 @@
 import { BalanceSummary } from "@/components/balance-summary";
 import { TransactionFormDialog } from "@/components/transaction-form-dialog";
-import { TransactionList } from "@/components/transaction-list";
+import { TransactionsBoard } from "@/components/transactions-board";
 import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
 import { rowToTransaction } from "@/lib/types";
@@ -80,7 +80,7 @@ export default async function Home({ searchParams }: PageProps) {
         <TransactionFormDialog autoOpen={autoOpenAdd} />
       </header>
       <BalanceSummary transactions={transactions} />
-      <TransactionList transactions={transactions} />
+      <TransactionsBoard transactions={transactions} />
     </main>
   );
 }

@@ -364,7 +364,7 @@
         "id": "10",
         "title": "Редактирование: клик по строке и updateTransaction",
         "description": "UPDATE с той же формой, предзаполненной.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "8"
         ],
@@ -392,7 +392,8 @@
             "testStrategy": "Postgres row обновлён.",
             "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:19:14.159Z"
       },
       {
         "id": "11",
@@ -457,9 +458,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:18:12.140Z",
+      "lastModified": "2026-05-12T17:19:14.159Z",
       "taskCount": 12,
-      "completedCount": 9,
+      "completedCount": 10,
       "tags": [
         "master"
       ]
