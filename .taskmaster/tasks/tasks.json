@@ -174,7 +174,7 @@
         "id": "5",
         "title": "shadcn/ui: Card, Input, Button, Form",
         "description": "Установить нужные примитивы для UI из PRD.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "1"
         ],
@@ -202,7 +202,8 @@
             "testStrategy": "Импорты без ошибок.",
             "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:13:46.986Z"
       },
       {
         "id": "6",
@@ -452,9 +453,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:11:01.138Z",
+      "lastModified": "2026-05-12T17:13:46.986Z",
       "taskCount": 12,
-      "completedCount": 4,
+      "completedCount": 5,
       "tags": [
         "master"
       ]
