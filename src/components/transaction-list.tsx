@@ -1,6 +1,11 @@
-import Link from "next/link";
+"use client";
 
-import { buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
+import { Trash2 } from "lucide-react";
+import { useTransition } from "react";
+
+import { deleteTransaction } from "@/app/actions";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { Transaction } from "@/lib/types";
 
@@ -22,9 +27,12 @@ function formatDate(iso: string): string {
 
 type Props = {
   transactions: Transaction[];
+  onRowClick?: (t: Transaction) => void;
 };
 
-export function TransactionList({ transactions }: Props) {
+export function TransactionList({ transactions, onRowClick }: Props) {
+  const [pending, startTransition] = useTransition();
+
   if (transactions.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-border bg-card p-10 text-center">
@@ -38,7 +46,7 @@ export function TransactionList({ transactions }: Props) {
 
   return (
     <div className="overflow-x-auto rounded-xl border border-border bg-card">
-      <table className="w-full min-w-[640px] text-left text-sm">
+      <table className="w-full min-w-[720px] text-left text-sm">
         <thead className="border-b border-border bg-muted/50 text-muted-foreground">
           <tr>
             <th className="px-4 py-3 font-medium">Дата</th>
@@ -46,11 +54,19 @@ export function TransactionList({ transactions }: Props) {
             <th className="px-4 py-3 font-medium">Категория</th>
             <th className="px-4 py-3 font-medium">Описание</th>
             <th className="px-4 py-3 font-medium text-right">Сумма</th>
+            <th className="w-12 px-2 py-3" aria-label="Удалить" />
           </tr>
         </thead>
         <tbody>
           {transactions.map((t) => (
-            <tr key={t.id} className="border-b border-border last:border-0">
+            <tr
+              key={t.id}
+              className={cn(
+                "border-b border-border last:border-0",
+                onRowClick ? "cursor-pointer hover:bg-muted/40" : "",
+              )}
+              onClick={onRowClick ? () => onRowClick(t) : undefined}
+            >
               <td className="px-4 py-3 whitespace-nowrap">{formatDate(t.date)}</td>
               <td className="px-4 py-3">
                 <span
@@ -75,6 +91,27 @@ export function TransactionList({ transactions }: Props) {
                 }
               >
                 {formatMoney(t.amount)}
+              </td>
+              <td className="px-2 py-2 text-right">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="text-muted-foreground hover:text-destructive"
+                  disabled={pending}
+                  aria-label="Удалить транзакцию"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!window.confirm("Точно удалить?")) {
+                      return;
+                    }
+                    startTransition(async () => {
+                      await deleteTransaction(t.id);
+                    });
+                  }}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
               </td>
             </tr>
           ))}

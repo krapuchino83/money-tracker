@@ -329,7 +329,7 @@
         "id": "9",
         "title": "Удаление: deleteTransaction и confirm в строке",
         "description": "DELETE через Server Action и иконка корзины.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "8"
         ],
@@ -357,7 +357,8 @@
             "testStrategy": "Отмена confirm не удаляет.",
             "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:18:12.140Z"
       },
       {
         "id": "10",
@@ -456,9 +457,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:17:10.651Z",
+      "lastModified": "2026-05-12T17:18:12.140Z",
       "taskCount": 12,
-      "completedCount": 8,
+      "completedCount": 9,
       "tags": [
         "master"
       ]
