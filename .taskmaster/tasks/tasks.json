@@ -49,7 +49,7 @@
         "id": "2",
         "title": "Supabase: проект, переменные, @supabase/ssr, клиенты, middleware",
         "description": "Подключить Supabase через современный пакет и подготовить browser/server клиенты.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "1"
         ],
@@ -86,7 +86,8 @@
             "testStrategy": "Запросы к `/` проходят через middleware без 500.",
             "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:10:07.549Z"
       },
       {
         "id": "3",
@@ -449,9 +450,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:08:15.418Z",
+      "lastModified": "2026-05-12T17:10:07.550Z",
       "taskCount": 12,
-      "completedCount": 1,
+      "completedCount": 2,
       "tags": [
         "master"
       ]
