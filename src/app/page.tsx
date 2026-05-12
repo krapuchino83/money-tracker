@@ -1,3 +1,4 @@
+import { BalanceSummary } from "@/components/balance-summary";
 import { TransactionList } from "@/components/transaction-list";
 import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
@@ -69,6 +70,7 @@ export default async function Home() {
           </p>
         </div>
       </header>
+      <BalanceSummary transactions={transactions} />
       <TransactionList transactions={transactions} />
     </main>
   );

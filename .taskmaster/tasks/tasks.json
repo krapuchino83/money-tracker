@@ -257,7 +257,7 @@
         "id": "7",
         "title": "Компонент BalanceSummary: три карточки за месяц",
         "description": "Доходы, расходы, баланс с форматированием «65 000 ₽».",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "6"
         ],
@@ -285,7 +285,8 @@
             "testStrategy": "Скриншот/ручная проверка.",
             "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:16:03.475Z"
       },
       {
         "id": "8",
@@ -454,9 +455,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:15:05.946Z",
+      "lastModified": "2026-05-12T17:16:03.475Z",
       "taskCount": 12,
-      "completedCount": 6,
+      "completedCount": 7,
       "tags": [
         "master"
       ]
