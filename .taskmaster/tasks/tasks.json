@@ -93,7 +93,7 @@
         "id": "3",
         "title": "Таблица transactions, RLS и тестовые данные",
         "description": "Создать схему БД и политики RLS для учебного открытого доступа.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "2"
         ],
@@ -132,7 +132,8 @@
             "testStrategy": "Выборка показывает разнообразные строки.",
             "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:10:26.452Z"
       },
       {
         "id": "4",
@@ -450,9 +451,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:10:07.550Z",
+      "lastModified": "2026-05-12T17:10:26.452Z",
       "taskCount": 12,
-      "completedCount": 2,
+      "completedCount": 3,
       "tags": [
         "master"
       ]
