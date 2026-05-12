@@ -1,4 +1,5 @@
 import { BalanceSummary } from "@/components/balance-summary";
+import { TransactionFormDialog } from "@/components/transaction-form-dialog";
 import { TransactionList } from "@/components/transaction-list";
 import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
@@ -6,7 +7,14 @@ import { rowToTransaction } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+type PageProps = {
+  searchParams?: Promise<{ add?: string }>;
+};
+
+export default async function Home({ searchParams }: PageProps) {
+  const sp = searchParams ? await searchParams : {};
+  const autoOpenAdd = sp.add === "1";
+
   const url = getSupabaseUrl();
   const key = getSupabaseAnonKey();
 
@@ -62,13 +70,14 @@ export default async function Home() {
 
   return (
     <main className="mx-auto max-w-5xl p-6 md:p-8">
-      <header className="mb-8 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Money Tracker</h1>
           <p className="text-muted-foreground text-sm">
             Список транзакций из Supabase (Server Components).
           </p>
         </div>
+        <TransactionFormDialog autoOpen={autoOpenAdd} />
       </header>
       <BalanceSummary transactions={transactions} />
       <TransactionList transactions={transactions} />

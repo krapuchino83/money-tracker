@@ -292,7 +292,7 @@
         "id": "8",
         "title": "Форма создания и Server Action addTransaction",
         "description": "CREATE с zod и revalidatePath('/')",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "4",
           "5",
@@ -322,7 +322,8 @@
             "testStrategy": "Новая строка в Supabase Table Editor.",
             "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:17:10.651Z"
       },
       {
         "id": "9",
@@ -455,9 +456,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:16:03.475Z",
+      "lastModified": "2026-05-12T17:17:10.651Z",
       "taskCount": 12,
-      "completedCount": 7,
+      "completedCount": 8,
       "tags": [
         "master"
       ]
