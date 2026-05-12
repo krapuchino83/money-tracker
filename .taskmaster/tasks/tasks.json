@@ -2,10 +2,10 @@
   "master": {
     "tasks": [
       {
-        "id": 1,
+        "id": "1",
         "title": "Скелет Next.js 16 + TypeScript + Tailwind CSS 4",
         "description": "Создать приложение money-tracker с App Router и базовой структурой папок из PRD.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [],
         "priority": "high",
         "details": "Инициализировать проект на Next.js 16 с TypeScript. Подключить Tailwind CSS 4. Создать каркас `src/app/` (`layout.tsx`, `page.tsx`, `globals.css`), заготовки `src/components/`, `src/lib/`. Убедиться, что `npm run dev` поднимается без ошибок. Не использовать deprecated `@supabase/auth-helpers-nextjs`.",
@@ -17,32 +17,42 @@
             "description": "Сгенерировать проект, включить strict TypeScript.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Сборка без ошибок."
+            "testStrategy": "Сборка без ошибок.",
+            "parentId": "undefined"
           },
           {
             "id": 2,
             "title": "Настроить Tailwind 4 и глобальные стили",
             "description": "Подключить `globals.css`, базовые утилиты.",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Проверить классы на главной странице."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Проверить классы на главной странице.",
+            "parentId": "undefined"
           },
           {
             "id": 3,
             "title": "Создать пустые каталоги components/lib по PRD",
             "description": "Структура как в разделе PRD про папки.",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Дерево папок соответствует PRD."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Дерево папок соответствует PRD.",
+            "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:08:15.418Z"
       },
       {
-        "id": 2,
+        "id": "2",
         "title": "Supabase: проект, переменные, @supabase/ssr, клиенты, middleware",
         "description": "Подключить Supabase через современный пакет и подготовить browser/server клиенты.",
         "status": "pending",
-        "dependencies": [1],
+        "dependencies": [
+          "1"
+        ],
         "priority": "high",
         "details": "Создать проект Supabase, вынести `NEXT_PUBLIC_SUPABASE_URL` и `NEXT_PUBLIC_SUPABASE_ANON_KEY` в `.env.local`. Установить `@supabase/ssr`. Реализовать `src/lib/supabase/client.ts` (createBrowserClient) и `server.ts` (createServerClient). Добавить `src/middleware.ts` для обновления сессии по документации Supabase + Next.js App Router.",
         "testStrategy": "Импорт клиентов без ошибок; middleware не падает на каждом запросе.",
@@ -53,7 +63,8 @@
             "description": "Проверить отсутствие service role в клиентском коде.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Поиск по репозиторию: service role не в client bundle."
+            "testStrategy": "Поиск по репозиторию: service role не в client bundle.",
+            "parentId": "undefined"
           },
           {
             "id": 2,
@@ -61,24 +72,30 @@
             "description": "Файлы как в PRD.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Typecheck проходит."
+            "testStrategy": "Typecheck проходит.",
+            "parentId": "undefined"
           },
           {
             "id": 3,
             "title": "Middleware для cookie-сессии",
             "description": "По официальному гайду @supabase/ssr.",
             "status": "pending",
-            "dependencies": [2],
-            "testStrategy": "Запросы к `/` проходят через middleware без 500."
+            "dependencies": [
+              2
+            ],
+            "testStrategy": "Запросы к `/` проходят через middleware без 500.",
+            "parentId": "undefined"
           }
         ]
       },
       {
-        "id": 3,
+        "id": "3",
         "title": "Таблица transactions, RLS и тестовые данные",
         "description": "Создать схему БД и политики RLS для учебного открытого доступа.",
         "status": "pending",
-        "dependencies": [2],
+        "dependencies": [
+          "2"
+        ],
         "priority": "high",
         "details": "В Supabase создать таблицу `transactions` с полями из PRD: id int8 PK, amount numeric(10,2), type text (income|expense), category text, description text nullable, date date, created_at timestamptz default now(). Включить RLS: SELECT/INSERT/UPDATE/DELETE разрешены всем (как в PRD для модуля 6). Добавить минимум 5 тестовых строк через Table Editor или SQL.",
         "testStrategy": "SQL select в SQL Editor возвращает 5+ строк; политики не блокируют CRUD для anon.",
@@ -89,32 +106,41 @@
             "description": "Соответствие типов PRD.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Таблица видна в Supabase UI."
+            "testStrategy": "Таблица видна в Supabase UI.",
+            "parentId": "undefined"
           },
           {
             "id": 2,
             "title": "Политики RLS для учебного режима",
             "description": "Явные политики для всех операций.",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Вставка/чтение из SQL под anon ключом."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Вставка/чтение из SQL под anon ключом.",
+            "parentId": "undefined"
           },
           {
             "id": 3,
             "title": "Seed: 5+ транзакций разных типов и категорий",
             "description": "Покрыть income и expense.",
             "status": "pending",
-            "dependencies": [2],
-            "testStrategy": "Выборка показывает разнообразные строки."
+            "dependencies": [
+              2
+            ],
+            "testStrategy": "Выборка показывает разнообразные строки.",
+            "parentId": "undefined"
           }
         ]
       },
       {
-        "id": 4,
+        "id": "4",
         "title": "Типы Transaction и общие zod-схемы",
         "description": "Типобезопасность и валидация без `any`.",
         "status": "pending",
-        "dependencies": [3],
+        "dependencies": [
+          "3"
+        ],
         "priority": "high",
         "details": "В `src/lib/types.ts` описать тип/интерфейс Transaction, согласованный с БД (amount как number в TS, хранение numeric в БД). Вынести zod-схему для create/update (тип, сумма ≥1, категория из фиксированного enum списка, описание ≤280 optional, дата). Экспортировать inferred types из zod для переиспользования в Server Actions и формах.",
         "testStrategy": "TypeScript strict: нет `any`; схема отклоняет невалидные payload на unit-уровне или ручной прогон.",
@@ -125,24 +151,30 @@
             "description": "Учесть Decimal/string edge cases при чтении.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Компиляция TS."
+            "testStrategy": "Компиляция TS.",
+            "parentId": "undefined"
           },
           {
             "id": 2,
             "title": "zod: transactionFormSchema с ограничениями PRD",
             "description": "Категории: Зарплата, Фриланс, Еда, Транспорт, Развлечения, Прочее.",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Невалидные данные дают parse error."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Невалидные данные дают parse error.",
+            "parentId": "undefined"
           }
         ]
       },
       {
-        "id": 5,
+        "id": "5",
         "title": "shadcn/ui: Card, Input, Button, Form",
         "description": "Установить нужные примитивы для UI из PRD.",
         "status": "pending",
-        "dependencies": [1],
+        "dependencies": [
+          "1"
+        ],
         "priority": "medium",
         "details": "Инициализировать shadcn/ui для проекта. Добавить компоненты Card, Input, Button, Form в `src/components/ui/`. Настроить тему совместно с Tailwind 4. Проверить доступность базовых контролов.",
         "testStrategy": "Story-like страница или временный блок на `/` с кнопкой и полем ввода рендерится.",
@@ -153,24 +185,32 @@
             "description": "Совместимость с Next 16 App Router.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Компоненты появились в `components/ui`."
+            "testStrategy": "Компоненты появились в `components/ui`.",
+            "parentId": "undefined"
           },
           {
             "id": 2,
             "title": "Добавить Card, Input, Button, Form",
             "description": "Как в списке PRD.",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Импорты без ошибок."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Импорты без ошибок.",
+            "parentId": "undefined"
           }
         ]
       },
       {
-        "id": 6,
+        "id": "6",
         "title": "Главная: чтение транзакций, TransactionList, пустое состояние",
         "description": "Server Component загружает данные из Supabase и показывает таблицу.",
         "status": "pending",
-        "dependencies": [3, 4, 5],
+        "dependencies": [
+          "3",
+          "4",
+          "5"
+        ],
         "priority": "high",
         "details": "В `src/app/page.tsx` (или вынести в компонент) использовать server client для `select` из `transactions`. Компонент `transaction-list.tsx`: колонки дата, тип, категория, описание, сумма; цвет текста: доход зелёный, расход красный. Пустое состояние: текст + CTA «Добавить первую» (кнопка может вести к форме позже).",
         "testStrategy": "С seed данными таблица заполнена; после удаления всех строк в БД — пустое состояние.",
@@ -181,32 +221,41 @@
             "description": "Сортировка по date desc или created_at.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Данные совпадают с Table Editor."
+            "testStrategy": "Данные совпадают с Table Editor.",
+            "parentId": "undefined"
           },
           {
             "id": 2,
             "title": "Таблица и цветовая индикация типа",
             "description": "Tailwind классы для income/expense.",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Визуальная проверка в браузере."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Визуальная проверка в браузере.",
+            "parentId": "undefined"
           },
           {
             "id": 3,
             "title": "Empty state + CTA",
             "description": "Условный рендер при length===0.",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Очистить таблицу — виден CTA."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Очистить таблицу — виден CTA.",
+            "parentId": "undefined"
           }
         ]
       },
       {
-        "id": 7,
+        "id": "7",
         "title": "Компонент BalanceSummary: три карточки за месяц",
         "description": "Доходы, расходы, баланс с форматированием «65 000 ₽».",
         "status": "pending",
-        "dependencies": [6],
+        "dependencies": [
+          "6"
+        ],
         "priority": "high",
         "details": "Файл `balance-summary.tsx`. Вход: массив транзакций или агрегаты с сервера. Фильтр по текущему календарному месяцу (или явно документированному правилу из PRD). Суммы: только income / expense; баланс = доходы − расходы. Форматирование с разделителем тысяч и символом ₽ через `Intl.NumberFormat` или аналог.",
         "testStrategy": "Сравнить цифры с ручным подсчётом из seed за выбранный месяц.",
@@ -217,24 +266,32 @@
             "description": "Явная граница месяца в локали пользователя или UTC — задокументировать.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Юнит на чистой функции агрегации."
+            "testStrategy": "Юнит на чистой функции агрегации.",
+            "parentId": "undefined"
           },
           {
             "id": 2,
             "title": "Три Card из shadcn с итогами",
             "description": "Заголовки по PRD.",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Скриншот/ручная проверка."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Скриншот/ручная проверка.",
+            "parentId": "undefined"
           }
         ]
       },
       {
-        "id": 8,
+        "id": "8",
         "title": "Форма создания и Server Action addTransaction",
         "description": "CREATE с zod и revalidatePath('/')",
         "status": "pending",
-        "dependencies": [4, 5, 6],
+        "dependencies": [
+          "4",
+          "5",
+          "6"
+        ],
         "priority": "high",
         "details": "`transaction-form.tsx`: radio Доход/Расход, amount number min 1, select категорий из PRD, description max 280 optional, date default сегодня. Кнопка «+ Добавить» открывает `<dialog>` или отдельный маршрут — на выбор, зафиксировать в коде. В `app/actions.ts` реализовать `addTransaction` с parse zod на сервере, insert в Supabase, `revalidatePath('/')`. Форма: `action={addTransaction}` или вызов action из client component по гайду Next.js.",
         "testStrategy": "После сохранения новая строка видна в таблице без ручного refresh; невалидные данные не создают запись.",
@@ -245,24 +302,30 @@
             "description": "Ошибки валидации показать пользователю.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Отправка пустой формы — сообщения об ошибках."
+            "testStrategy": "Отправка пустой формы — сообщения об ошибках.",
+            "parentId": "undefined"
           },
           {
             "id": 2,
             "title": "Server Action insert + revalidatePath",
             "description": "Использовать server Supabase client.",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Новая строка в Supabase Table Editor."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Новая строка в Supabase Table Editor.",
+            "parentId": "undefined"
           }
         ]
       },
       {
-        "id": 9,
+        "id": "9",
         "title": "Удаление: deleteTransaction и confirm в строке",
         "description": "DELETE через Server Action и иконка корзины.",
         "status": "pending",
-        "dependencies": [8],
+        "dependencies": [
+          "8"
+        ],
         "priority": "medium",
         "details": "В каждой строке `TransactionList` — кнопка-иконка корзины. Перед вызовом `deleteTransaction(id)` показать `window.confirm` или UI confirm по PRD. После успеха `revalidatePath('/')`. Обработать ошибки Supabase.",
         "testStrategy": "Удалить строку — исчезла из UI и из БД.",
@@ -273,24 +336,30 @@
             "description": "Проверка zod для id.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Несуществующий id — контролируемая ошибка."
+            "testStrategy": "Несуществующий id — контролируемая ошибка.",
+            "parentId": "undefined"
           },
           {
             "id": 2,
             "title": "Интеграция confirm в таблице",
             "description": "Текст «Точно удалить?»",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Отмена confirm не удаляет."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Отмена confirm не удаляет.",
+            "parentId": "undefined"
           }
         ]
       },
       {
-        "id": 10,
+        "id": "10",
         "title": "Редактирование: клик по строке и updateTransaction",
         "description": "UPDATE с той же формой, предзаполненной.",
         "status": "pending",
-        "dependencies": [8],
+        "dependencies": [
+          "8"
+        ],
         "priority": "medium",
         "details": "По клику на строку открыть форму с данными транзакции (dialog или страница). Режим edit: вызывать `updateTransaction(id, data)` в `actions.ts`, zod на сервере, `revalidatePath('/')`. Не дублировать схему валидации — общая с create где возможно.",
         "testStrategy": "Изменить сумму/категорию — отражается в таблице и в БД.",
@@ -301,24 +370,30 @@
             "description": "Передача id и default values.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Поля формы совпадают с row."
+            "testStrategy": "Поля формы совпадают с row.",
+            "parentId": "undefined"
           },
           {
             "id": 2,
             "title": "Server Action updateTransaction",
             "description": "update по id с RLS.",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Postgres row обновлён."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Postgres row обновлён.",
+            "parentId": "undefined"
           }
         ]
       },
       {
-        "id": 11,
+        "id": "11",
         "title": "Бонус: фильтры «Все / Доходы / Расходы» через searchParams",
         "description": "Опциональная фильтрация на главной.",
         "status": "pending",
-        "dependencies": [6],
+        "dependencies": [
+          "6"
+        ],
         "priority": "low",
         "details": "Кнопки над таблицей переключают `?type=income|expense` или без параметра для «Все». Server Component читает `searchParams` и фильтрует запрос к Supabase. Сохранить совместимость с BalanceSummary (уточнить в реализации: только таблица или и карточки — задокументировать выбор).",
         "testStrategy": "Смена query меняет состав строк; прямой URL работает.",
@@ -329,16 +404,22 @@
             "description": "Без полной перезагрузки SPA где возможно.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Ручной клик по фильтрам."
+            "testStrategy": "Ручной клик по фильтрам.",
+            "parentId": "undefined"
           }
         ]
       },
       {
-        "id": 12,
+        "id": "12",
         "title": "GET /api/transactions, проверка Thunder Client и деплой Vercel",
         "description": "REST для сравнения с Server Actions + продакшен env.",
         "status": "pending",
-        "dependencies": [6, 8, 9, 10],
+        "dependencies": [
+          "6",
+          "8",
+          "9",
+          "10"
+        ],
         "priority": "medium",
         "details": "Реализовать `src/app/api/transactions/route.ts` с методом GET, возвращающим JSON списка (чтение из Supabase server-side). Прогнать запросы в Thunder Client: коды 200, корректное тело. Подключить репозиторий к Vercel, задать env переменные Supabase, задеплоить `main`, проверить работу сайта на `*.vercel.app`.",
         "testStrategy": "Thunder Client GET локально и на проде; smoke-тест UI на Vercel.",
@@ -349,18 +430,31 @@
             "description": "Обработка ошибок БД → 500 с телом.",
             "status": "pending",
             "dependencies": [],
-            "testStrategy": "Thunder Client: 200 и массив."
+            "testStrategy": "Thunder Client: 200 и массив.",
+            "parentId": "undefined"
           },
           {
             "id": 2,
             "title": "Vercel env и production build",
             "description": "Совпадение ключей с Supabase.",
             "status": "pending",
-            "dependencies": [1],
-            "testStrategy": "Деплой зелёный; главная открывается."
+            "dependencies": [
+              1
+            ],
+            "testStrategy": "Деплой зелёный; главная открывается.",
+            "parentId": "undefined"
           }
         ]
       }
-    ]
+    ],
+    "metadata": {
+      "version": "1.0.0",
+      "lastModified": "2026-05-12T17:08:15.418Z",
+      "taskCount": 12,
+      "completedCount": 1,
+      "tags": [
+        "master"
+      ]
+    }
   }
 }

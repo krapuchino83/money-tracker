@@ -2,7 +2,7 @@
 
 **Title:** Скелет Next.js 16 + TypeScript + Tailwind CSS 4
 
-**Status:** pending
+**Status:** done
 
 **Dependencies:** None
 
