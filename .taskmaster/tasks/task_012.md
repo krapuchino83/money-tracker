@@ -22,14 +22,14 @@ Thunder Client GET локально и на проде; smoke-тест UI на V
 
 ### 12.1. Route handler GET + json response
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** None  
 
 Обработка ошибок БД → 500 с телом.
 
 ### 12.2. Vercel env и production build
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 12.1  
 
 Совпадение ключей с Supabase.

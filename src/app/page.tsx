@@ -31,7 +31,9 @@ export default async function Home({ searchParams }: PageProps) {
           <code className="rounded bg-muted px-1.5 py-0.5 text-foreground">.env.local</code> с
           переменными{" "}
           <code className="rounded bg-muted px-1.5 py-0.5">NEXT_PUBLIC_SUPABASE_URL</code> и{" "}
-          <code className="rounded bg-muted px-1.5 py-0.5">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> (см.{" "}
+          <code className="rounded bg-muted px-1.5 py-0.5">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> (или{" "}
+          <code className="rounded bg-muted px-1.5 py-0.5">NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code>
+          ), см.{" "}
           <code className="rounded bg-muted px-1.5 py-0.5">.env.example</code>
           ), затем выполните SQL-миграцию в Supabase.
         </p>
@@ -39,18 +41,21 @@ export default async function Home({ searchParams }: PageProps) {
     );
   }
 
+  const typeFilter =
+    sp.type === "income" || sp.type === "expense" ? (sp.type as "income" | "expense") : null;
+
   const supabase = await createClient();
-  const { data, error } = await supabase
+  const { data: allRows, error: allError } = await supabase
     .from("transactions")
     .select("*")
     .order("date", { ascending: false });
 
-  if (error) {
+  if (allError) {
     return (
       <main className="mx-auto max-w-3xl p-8">
         <h1 className="text-2xl font-semibold tracking-tight">Money Tracker</h1>
         <p className="mt-4 text-destructive">
-          Ошибка загрузки данных: {error.message}. Проверьте таблицу{" "}
+          Ошибка загрузки данных: {allError.message}. Проверьте таблицу{" "}
           <code className="rounded bg-muted px-1.5 py-0.5 text-foreground">transactions</code> и
           ключи Supabase.
         </p>
@@ -58,7 +63,7 @@ export default async function Home({ searchParams }: PageProps) {
     );
   }
 
-  const transactions = (data ?? []).map((row) =>
+  const transactions = (allRows ?? []).map((row) =>
     rowToTransaction(
       row as {
         id: number;
@@ -72,11 +77,37 @@ export default async function Home({ searchParams }: PageProps) {
     ),
   );
 
-  const typeFilter =
-    sp.type === "income" || sp.type === "expense" ? (sp.type as "income" | "expense") : null;
-  const tableTransactions = typeFilter
-    ? transactions.filter((t) => t.type === typeFilter)
-    : transactions;
+  /** PRD: фильтр через query к Supabase; баланс считается по полному списку. */
+  let tableTransactions = transactions;
+  if (typeFilter) {
+    const { data: filteredRows, error: filterError } = await supabase
+      .from("transactions")
+      .select("*")
+      .eq("type", typeFilter)
+      .order("date", { ascending: false });
+
+    if (filterError) {
+      return (
+        <main className="mx-auto max-w-3xl p-8">
+          <h1 className="text-2xl font-semibold tracking-tight">Money Tracker</h1>
+          <p className="mt-4 text-destructive">Ошибка фильтра: {filterError.message}</p>
+        </main>
+      );
+    }
+    tableTransactions = (filteredRows ?? []).map((row) =>
+      rowToTransaction(
+        row as {
+          id: number;
+          amount: unknown;
+          type: string;
+          category: string;
+          description: string | null;
+          date: string;
+          created_at: string;
+        },
+      ),
+    );
+  }
 
   return (
     <main className="mx-auto max-w-5xl p-6 md:p-8">

@@ -22,21 +22,21 @@
 
 ### 1.1. create-next-app с App Router и TS
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** None  
 
 Сгенерировать проект, включить strict TypeScript.
 
 ### 1.2. Настроить Tailwind 4 и глобальные стили
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 1.1  
 
 Подключить `globals.css`, базовые утилиты.
 
 ### 1.3. Создать пустые каталоги components/lib по PRD
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 1.1  
 
 Структура как в разделе PRD про папки.

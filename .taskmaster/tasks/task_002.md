@@ -22,21 +22,21 @@
 
 ### 2.1. Env и ключи только для anon (не service role в браузер)
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** None  
 
 Проверить отсутствие service role в клиентском коде.
 
 ### 2.2. Реализовать server и browser Supabase клиенты
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** None  
 
 Файлы как в PRD.
 
 ### 2.3. Middleware для cookie-сессии
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 2.2  
 
 По официальному гайду @supabase/ssr.

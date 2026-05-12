@@ -22,14 +22,14 @@
 
 ### 8.1. Разметка формы и связь с полями zod
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** None  
 
 Ошибки валидации показать пользователю.
 
 ### 8.2. Server Action insert + revalidatePath
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 8.1  
 
 Использовать server Supabase client.

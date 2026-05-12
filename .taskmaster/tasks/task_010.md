@@ -22,14 +22,14 @@
 
 ### 10.1. Состояние выбранной транзакции для формы
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** None  
 
 Передача id и default values.
 
 ### 10.2. Server Action updateTransaction
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 10.1  
 
 update по id с RLS.

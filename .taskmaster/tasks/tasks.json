@@ -15,7 +15,7 @@
             "id": 1,
             "title": "create-next-app с App Router и TS",
             "description": "Сгенерировать проект, включить strict TypeScript.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Сборка без ошибок.",
             "parentId": "undefined"
@@ -24,7 +24,7 @@
             "id": 2,
             "title": "Настроить Tailwind 4 и глобальные стили",
             "description": "Подключить `globals.css`, базовые утилиты.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -35,7 +35,7 @@
             "id": 3,
             "title": "Создать пустые каталоги components/lib по PRD",
             "description": "Структура как в разделе PRD про папки.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -61,7 +61,7 @@
             "id": 1,
             "title": "Env и ключи только для anon (не service role в браузер)",
             "description": "Проверить отсутствие service role в клиентском коде.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Поиск по репозиторию: service role не в client bundle.",
             "parentId": "undefined"
@@ -70,7 +70,7 @@
             "id": 2,
             "title": "Реализовать server и browser Supabase клиенты",
             "description": "Файлы как в PRD.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Typecheck проходит.",
             "parentId": "undefined"
@@ -79,7 +79,7 @@
             "id": 3,
             "title": "Middleware для cookie-сессии",
             "description": "По официальному гайду @supabase/ssr.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               2
             ],
@@ -105,7 +105,7 @@
             "id": 1,
             "title": "DDL таблицы и индексы при необходимости",
             "description": "Соответствие типов PRD.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Таблица видна в Supabase UI.",
             "parentId": "undefined"
@@ -114,7 +114,7 @@
             "id": 2,
             "title": "Политики RLS для учебного режима",
             "description": "Явные политики для всех операций.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -125,7 +125,7 @@
             "id": 3,
             "title": "Seed: 5+ транзакций разных типов и категорий",
             "description": "Покрыть income и expense.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               2
             ],
@@ -151,7 +151,7 @@
             "id": 1,
             "title": "Интерфейс Transaction и маппинг из Supabase row",
             "description": "Учесть Decimal/string edge cases при чтении.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Компиляция TS.",
             "parentId": "undefined"
@@ -160,7 +160,7 @@
             "id": 2,
             "title": "zod: transactionFormSchema с ограничениями PRD",
             "description": "Категории: Зарплата, Фриланс, Еда, Транспорт, Развлечения, Прочее.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -186,7 +186,7 @@
             "id": 1,
             "title": "CLI shadcn init под текущий стек",
             "description": "Совместимость с Next 16 App Router.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Компоненты появились в `components/ui`.",
             "parentId": "undefined"
@@ -195,7 +195,7 @@
             "id": 2,
             "title": "Добавить Card, Input, Button, Form",
             "description": "Как в списке PRD.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -223,7 +223,7 @@
             "id": 1,
             "title": "Запрос списка в Server Component",
             "description": "Сортировка по date desc или created_at.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Данные совпадают с Table Editor.",
             "parentId": "undefined"
@@ -232,7 +232,7 @@
             "id": 2,
             "title": "Таблица и цветовая индикация типа",
             "description": "Tailwind классы для income/expense.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -243,7 +243,7 @@
             "id": 3,
             "title": "Empty state + CTA",
             "description": "Условный рендер при length===0.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -269,7 +269,7 @@
             "id": 1,
             "title": "Фильтрация транзакций по месяцу",
             "description": "Явная граница месяца в локали пользователя или UTC — задокументировать.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Юнит на чистой функции агрегации.",
             "parentId": "undefined"
@@ -278,7 +278,7 @@
             "id": 2,
             "title": "Три Card из shadcn с итогами",
             "description": "Заголовки по PRD.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -306,7 +306,7 @@
             "id": 1,
             "title": "Разметка формы и связь с полями zod",
             "description": "Ошибки валидации показать пользователю.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Отправка пустой формы — сообщения об ошибках.",
             "parentId": "undefined"
@@ -315,7 +315,7 @@
             "id": 2,
             "title": "Server Action insert + revalidatePath",
             "description": "Использовать server Supabase client.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -341,7 +341,7 @@
             "id": 1,
             "title": "Server Action deleteTransaction(id)",
             "description": "Проверка zod для id.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Несуществующий id — контролируемая ошибка.",
             "parentId": "undefined"
@@ -350,7 +350,7 @@
             "id": 2,
             "title": "Интеграция confirm в таблице",
             "description": "Текст «Точно удалить?»",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -376,7 +376,7 @@
             "id": 1,
             "title": "Состояние выбранной транзакции для формы",
             "description": "Передача id и default values.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Поля формы совпадают с row.",
             "parentId": "undefined"
@@ -385,7 +385,7 @@
             "id": 2,
             "title": "Server Action updateTransaction",
             "description": "update по id с RLS.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],
@@ -411,7 +411,7 @@
             "id": 1,
             "title": "Link или router replace для query",
             "description": "Без полной перезагрузки SPA где возможно.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Ручной клик по фильтрам.",
             "parentId": "undefined"
@@ -438,7 +438,7 @@
             "id": 1,
             "title": "Route handler GET + json response",
             "description": "Обработка ошибок БД → 500 с телом.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [],
             "testStrategy": "Thunder Client: 200 и массив.",
             "parentId": "undefined"
@@ -447,7 +447,7 @@
             "id": 2,
             "title": "Vercel env и production build",
             "description": "Совпадение ключей с Supabase.",
-            "status": "pending",
+            "status": "done",
             "dependencies": [
               1
             ],

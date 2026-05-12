@@ -22,21 +22,21 @@ SQL select в SQL Editor возвращает 5+ строк; политики н
 
 ### 3.1. DDL таблицы и индексы при необходимости
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** None  
 
 Соответствие типов PRD.
 
 ### 3.2. Политики RLS для учебного режима
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 3.1  
 
 Явные политики для всех операций.
 
 ### 3.3. Seed: 5+ транзакций разных типов и категорий
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 3.2  
 
 Покрыть income и expense.

@@ -22,7 +22,7 @@
 
 ### 11.1. Link или router replace для query
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** None  
 
 Без полной перезагрузки SPA где возможно.

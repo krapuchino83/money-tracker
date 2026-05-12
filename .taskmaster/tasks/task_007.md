@@ -22,14 +22,14 @@
 
 ### 7.1. Фильтрация транзакций по месяцу
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** None  
 
 Явная граница месяца в локали пользователя или UTC — задокументировать.
 
 ### 7.2. Три Card из shadcn с итогами
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 7.1  
 
 Заголовки по PRD.

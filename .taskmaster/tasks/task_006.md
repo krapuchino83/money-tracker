@@ -22,21 +22,21 @@
 
 ### 6.1. Запрос списка в Server Component
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** None  
 
 Сортировка по date desc или created_at.
 
 ### 6.2. Таблица и цветовая индикация типа
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 6.1  
 
 Tailwind классы для income/expense.
 
 ### 6.3. Empty state + CTA
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 6.1  
 
 Условный рендер при length===0.

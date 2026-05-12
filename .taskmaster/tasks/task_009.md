@@ -22,14 +22,14 @@
 
 ### 9.1. Server Action deleteTransaction(id)
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** None  
 
 Проверка zod для id.
 
 ### 9.2. Интеграция confirm в таблице
 
-**Status:** pending  
+**Status:** done  
 **Dependencies:** 9.1  
 
 Текст «Точно удалить?»
