@@ -139,7 +139,7 @@
         "id": "4",
         "title": "Типы Transaction и общие zod-схемы",
         "description": "Типобезопасность и валидация без `any`.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "3"
         ],
@@ -167,7 +167,8 @@
             "testStrategy": "Невалидные данные дают parse error.",
             "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:11:01.138Z"
       },
       {
         "id": "5",
@@ -451,9 +452,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:10:26.452Z",
+      "lastModified": "2026-05-12T17:11:01.138Z",
       "taskCount": 12,
-      "completedCount": 3,
+      "completedCount": 4,
       "tags": [
         "master"
       ]
