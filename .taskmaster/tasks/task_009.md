@@ -2,9 +2,9 @@
 
 **Title:** Удаление: deleteTransaction и confirm в строке
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 8
+**Dependencies:** 8 ✓
 
 **Priority:** medium
 

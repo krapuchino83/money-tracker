@@ -2,9 +2,9 @@
 
 **Title:** Форма создания и Server Action addTransaction
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 4, 5, 6
+**Dependencies:** 4 ✓, 5 ✓, 6 ✓
 
 **Priority:** high
 

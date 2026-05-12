@@ -2,7 +2,7 @@
 
 **Title:** shadcn/ui: Card, Input, Button, Form
 
-**Status:** pending
+**Status:** done
 
 **Dependencies:** 1 ✓
 

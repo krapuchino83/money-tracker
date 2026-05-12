@@ -423,7 +423,7 @@
         "id": "12",
         "title": "GET /api/transactions, проверка Thunder Client и деплой Vercel",
         "description": "REST для сравнения с Server Actions + продакшен env.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "6",
           "8",
@@ -454,14 +454,15 @@
             "testStrategy": "Деплой зелёный; главная открывается.",
             "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:20:20.331Z"
       }
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:20:02.735Z",
+      "lastModified": "2026-05-12T17:20:20.331Z",
       "taskCount": 12,
-      "completedCount": 11,
+      "completedCount": 12,
       "tags": [
         "master"
       ]

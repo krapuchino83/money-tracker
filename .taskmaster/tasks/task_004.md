@@ -2,9 +2,9 @@
 
 **Title:** Типы Transaction и общие zod-схемы
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 3
+**Dependencies:** 3 ✓
 
 **Priority:** high
 

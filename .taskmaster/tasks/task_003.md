@@ -2,9 +2,9 @@
 
 **Title:** Таблица transactions, RLS и тестовые данные
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 2
+**Dependencies:** 2 ✓
 
 **Priority:** high
 

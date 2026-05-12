@@ -2,9 +2,9 @@
 
 **Title:** Бонус: фильтры «Все / Доходы / Расходы» через searchParams
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 6
+**Dependencies:** 6 ✓
 
 **Priority:** low
 

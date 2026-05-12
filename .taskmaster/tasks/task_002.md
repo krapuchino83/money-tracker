@@ -2,7 +2,7 @@
 
 **Title:** Supabase: проект, переменные, @supabase/ssr, клиенты, middleware
 
-**Status:** pending
+**Status:** done
 
 **Dependencies:** 1 ✓
 

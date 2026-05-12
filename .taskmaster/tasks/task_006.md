@@ -2,9 +2,9 @@
 
 **Title:** Главная: чтение транзакций, TransactionList, пустое состояние
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 3, 4, 5
+**Dependencies:** 3 ✓, 4 ✓, 5 ✓
 
 **Priority:** high
 

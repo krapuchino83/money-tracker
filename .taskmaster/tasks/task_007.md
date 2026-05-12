@@ -2,9 +2,9 @@
 
 **Title:** Компонент BalanceSummary: три карточки за месяц
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 6
+**Dependencies:** 6 ✓
 
 **Priority:** high
 

@@ -2,9 +2,9 @@
 
 **Title:** GET /api/transactions, проверка Thunder Client и деплой Vercel
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 6, 8, 9, 10
+**Dependencies:** 6 ✓, 8 ✓, 9 ✓, 10 ✓
 
 **Priority:** medium
 
