@@ -399,7 +399,7 @@
         "id": "11",
         "title": "Бонус: фильтры «Все / Доходы / Расходы» через searchParams",
         "description": "Опциональная фильтрация на главной.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "6"
         ],
@@ -416,7 +416,8 @@
             "testStrategy": "Ручной клик по фильтрам.",
             "parentId": "undefined"
           }
-        ]
+        ],
+        "updatedAt": "2026-05-12T17:20:02.734Z"
       },
       {
         "id": "12",
@@ -458,9 +459,9 @@
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:19:14.159Z",
+      "lastModified": "2026-05-12T17:20:02.735Z",
       "taskCount": 12,
-      "completedCount": 10,
+      "completedCount": 11,
       "tags": [
         "master"
       ]
