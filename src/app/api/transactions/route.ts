@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 
+import { convertPaymentToRub } from "@/lib/nbrb/fetch-rates";
 import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
 import { createClient } from "@/lib/supabase/server";
 import { rowToTransaction } from "@/lib/types";
+import { sortTransactionsByDateDesc } from "@/lib/transactions/sort";
 import {
   transactionCreateSchema,
   transactionIdSchema,
@@ -16,19 +18,27 @@ function envErrorResponse() {
   );
 }
 
+function unauthorized() {
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
+
+type TxRow = {
+  id: number;
+  amount: unknown;
+  type: string;
+  category: string;
+  description: string | null;
+  date: string;
+  created_at: string;
+  payment_currency?: string | null;
+  payment_amount?: unknown;
+  exchange_rate?: unknown;
+  rate_date?: string | null;
+};
+
 function mapRows(data: unknown[] | null) {
-  return (data ?? []).map((row) =>
-    rowToTransaction(
-      row as {
-        id: number;
-        amount: unknown;
-        type: string;
-        category: string;
-        description: string | null;
-        date: string;
-        created_at: string;
-      },
-    ),
+  return sortTransactionsByDateDesc(
+    (data ?? []).map((row) => rowToTransaction(row as TxRow)),
   );
 }
 
@@ -39,10 +49,18 @@ export async function GET() {
 
   try {
     const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return unauthorized();
+    }
+
     const { data, error } = await supabase
       .from("transactions")
       .select("*")
-      .order("date", { ascending: false });
+      .order("date", { ascending: false })
+      .order("created_at", { ascending: false });
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -72,16 +90,43 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { type, amount, category, description, date } = parsed.data;
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return unauthorized();
+  }
+
+  const { type, payment_currency, payment_amount, category, description, date } = parsed.data;
+  const dateIso = date.toISOString().slice(0, 10);
+
+  let amountRub: number;
+  let exchangeRate: number;
+  let rateDate: string;
+  try {
+    const converted = await convertPaymentToRub(payment_currency, payment_amount, dateIso);
+    amountRub = converted.amountRub;
+    exchangeRate = converted.exchangeRate;
+    rateDate = converted.rateDate;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Ошибка курса НБРБ";
+    return NextResponse.json({ error: message }, { status: 502 });
+  }
+
   const { data, error } = await supabase
     .from("transactions")
     .insert({
+      user_id: user.id,
       type,
-      amount,
+      amount: amountRub,
+      payment_currency,
+      payment_amount,
+      exchange_rate: exchangeRate,
+      rate_date: rateDate,
       category,
       description,
-      date: date.toISOString().slice(0, 10),
+      date: dateIso,
     })
     .select("*")
     .single();
@@ -90,20 +135,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json(
-    rowToTransaction(
-      data as {
-        id: number;
-        amount: unknown;
-        type: string;
-        category: string;
-        description: string | null;
-        date: string;
-        created_at: string;
-      },
-    ),
-    { status: 201 },
-  );
+  return NextResponse.json(rowToTransaction(data as TxRow), { status: 201 });
 }
 
 export async function PATCH(request: Request) {
@@ -123,18 +155,45 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { id, type, amount, category, description, date } = parsed.data;
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return unauthorized();
+  }
+
+  const { id, type, payment_currency, payment_amount, category, description, date } = parsed.data;
+  const dateIso = date.toISOString().slice(0, 10);
+
+  let amountRub: number;
+  let exchangeRate: number;
+  let rateDate: string;
+  try {
+    const converted = await convertPaymentToRub(payment_currency, payment_amount, dateIso);
+    amountRub = converted.amountRub;
+    exchangeRate = converted.exchangeRate;
+    rateDate = converted.rateDate;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Ошибка курса НБРБ";
+    return NextResponse.json({ error: message }, { status: 502 });
+  }
+
   const { data, error } = await supabase
     .from("transactions")
     .update({
       type,
-      amount,
+      amount: amountRub,
+      payment_currency,
+      payment_amount,
+      exchange_rate: exchangeRate,
+      rate_date: rateDate,
       category,
       description,
-      date: date.toISOString().slice(0, 10),
+      date: dateIso,
     })
     .eq("id", id)
+    .eq("user_id", user.id)
     .select("*")
     .single();
 
@@ -142,19 +201,11 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json(
-    rowToTransaction(
-      data as {
-        id: number;
-        amount: unknown;
-        type: string;
-        category: string;
-        description: string | null;
-        date: string;
-        created_at: string;
-      },
-    ),
-  );
+  if (!data) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  return NextResponse.json(rowToTransaction(data as TxRow));
 }
 
 export async function DELETE(request: Request) {
@@ -169,7 +220,18 @@ export async function DELETE(request: Request) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.from("transactions").delete().eq("id", parsed.data.id);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return unauthorized();
+  }
+
+  const { error } = await supabase
+    .from("transactions")
+    .delete()
+    .eq("id", parsed.data.id)
+    .eq("user_id", user.id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

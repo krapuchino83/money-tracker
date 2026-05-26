@@ -1,8 +1,11 @@
 # Money Tracker — заметки для агента
 
 - Стек: Next.js 16 (App Router), TypeScript strict, Tailwind 4, shadcn base-nova, Supabase (`@supabase/ssr`), Server Actions в `src/app/actions.ts`.
-- Переменные: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (или `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) в `.env.local`. Service role в браузер не передавать.
-- Схема БД: `supabase/migrations/0001_transactions.sql` — таблица `transactions`, открытые RLS-политики для учебного модуля.
-- UI: главная `src/app/page.tsx`; таблица и диалоги — `src/components/` (`transactions-board`, `transaction-form-dialog`, `transaction-list`, `balance-summary`).
+- Переменные: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (или `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) в `.env.local`. На хостинге (Lovable и др.) те же имена в настройках env проекта. Service role в браузер не передавать.
+- **Supabase Auth (Google и OAuth):** в Dashboard → Authentication → URL Configuration: **Site URL** = боевой адрес приложения (`https://…lovable.app` или свой домен). В **Redirect URLs** добавить и localhost, и прод: `http://localhost:3000/auth/callback`, `https://<поддомен>.lovable.app/auth/callback` (или wildcard `https://<поддомен>.lovable.app/**`). В Google Cloud для OAuth **Authorized redirect URI** — только URL вида `https://<project>.supabase.co/auth/v1/callback` (как в Supabase → Google provider), не страница Lovable.
+- Схема БД (порядок в `supabase/migrations/`): `0001` transactions → `0002` user_id/RLS (`0002_transactions_user_rls` или `0002_user_id_backfill`) → `0003` profiles → валюта/переводы (`0004_0005_currency_and_transfers` **или** `0004`+`0005_wallet_transfers`, не оба) → `0006` примеры (опц.) → `0007_profiles_stripe_pro` (PRO / Stripe). Админка: `ADMIN_EMAIL`, `SUPABASE_SERVICE_ROLE_KEY` (только сервер).
+- **Stripe PRO:** `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_YEARLY` (`npm run stripe:setup-prices`). Webhook `STRIPE_WEBHOOK_SECRET` опционален — после оплаты также `POST /api/stripe/confirm`. CSV: `GET /api/reports/transactions`.
+- **Курсы НБРБ:** `src/lib/nbrb/` — API https://api.nbrb.by/exrates; счёт в ₽, оплата ₽/$, переключатель отображения ₽/$.
+- UI: главная `src/app/page.tsx`; таблица и диалоги — `src/components/` (`transactions-board`, `transaction-form-dialog`, `transaction-list`, `balance-summary`). **Темы:** только `light` и `dark` (`src/lib/theme.ts`, переключатель — луна/солнце).
 - REST: `GET|POST|PATCH /api/transactions`, `DELETE /api/transactions?id=` — те же zod-схемы, что и для Server Actions.
-- Задачи: `.taskmaster/tasks/tasks.json` (тег `master`); команды — `npx task-master list|next|show`.
+- Задачи: `.taskmaster/tasks/tasks.json` (тег `master`); команды — `npx task-master list|next|show`. PRD для парсинга: `.taskmaster/docs/PRD-3.md` (модуль 8), рядом с `PRD-2.md`.

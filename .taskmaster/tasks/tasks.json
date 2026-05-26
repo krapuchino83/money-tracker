@@ -456,13 +456,693 @@
           }
         ],
         "updatedAt": "2026-05-12T17:20:20.331Z"
+      },
+      {
+        "id": "13",
+        "title": "Supabase Auth: Email + OAuth-провайдеры в дашборде",
+        "description": "Включить провайдеры входа как в PRD модуль 7 (письма, Google, GitHub).",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "details": "В Supabase Dashboard → Authentication: включить Email (sign up, подтверждение почты при необходимости). Зарегистрировать Google и GitHub OAuth: client id/secret, redirect URL вида `{SITE_URL}/auth/callback`. Убедиться, что Site URL и redirect whitelist совместимы с локальным `localhost` и продом.",
+        "testStrategy": "В UI Supabase отправка Magic link/регистрация не блокируется; OAuth-приложения в консолях провайдеров помечены как настроенные.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Email provider: включение и базовые настройки",
+            "description": "Подтверждение регистрации по почте если требуется PRD.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Тестовая регистрация доходит до письма или к подтверждению без ошибки настроек.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Google и GitHub в Authentication → Providers",
+            "description": "Ключи, redirect URIs совпадают с `/auth/callback`.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Сохранение провайдера без ошибок в Dashboard.",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:05:21.331Z"
+      },
+      {
+        "id": "14",
+        "title": "Проверка @supabase/ssr и клиентов browser/server",
+        "description": "Убедиться, что связка с модулем 6 соответствует PRD модуль 7 без deprecated-пакетов.",
+        "status": "done",
+        "dependencies": [
+          "2"
+        ],
+        "priority": "high",
+        "details": "Пакет `@supabase/ssr` установлен; `createBrowserClient` в `src/lib/supabase/client.ts`, `createServerClient` в `server.ts`; не использовать `@supabase/auth-helpers-nextjs`. Связка cookie и параметров должна поддерживать `getSession`/`getUser` после middleware.",
+        "testStrategy": "Typecheck ок; официальный сниппет Supabase+Next подключается без дублирования клиента.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Зависимости и версии пакета",
+            "description": "Актуальная версия `@supabase/ssr` в lockfile.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "`npm ls @supabase/ssr` один экземпляр.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Клиенты server/browser по одному паттерну",
+            "description": "Без утекания service role в браузер.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Поиск по репозиторию: service role только в серверном окружении.",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:02:35.371Z"
+      },
+      {
+        "id": "15",
+        "title": "Middleware: updateSession на каждом запросе",
+        "description": "`src/middleware.ts` по паттерну Supabase — обновление cookie-сессии.",
+        "status": "done",
+        "dependencies": [
+          "14"
+        ],
+        "priority": "high",
+        "details": "Реализовать `updateSession` через `createServerClient` для Next.js Middleware: каждый релевантный запрос обновляет JWT/cookies. Корректный `matcher` (исключить статику, `_next`). Не смешивать с защитой приватных путей до задачи про редиректы — здесь только жизненный цикл сессии.",
+        "testStrategy": "Запросы к `/`, `/login`, API не дают 500 от middleware; в DevTools видны установка/обновление auth cookies после логина.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Функция updateSession из доков Supabase",
+            "description": "Копировать актуальный гайд @supabase/ssr + Next 16.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Логин сохраняется между навигациями.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Matcher и производительность",
+            "description": "Не дергать middleware для изображений и статики.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Сеть: статические ассеты без лишних задержек middleware.",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:02:35.371Z"
+      },
+      {
+        "id": "16",
+        "title": "Регистрация: страница /register, форма, Server Action signUp",
+        "description": "Email + пароль + подтверждение, zod, signUp через Supabase.",
+        "status": "done",
+        "dependencies": [
+          "13",
+          "15"
+        ],
+        "priority": "high",
+        "details": "Структура: `src/app/(auth)/register/page.tsx`, `components/auth/register-form.tsx`, `src/app/actions/auth.ts` или аналог: `signUp` вызывает `supabase.auth.signUp({ email, password })`. Zod: пароль ≥8 символов, пароли совпадают. После успеха — сообщение «Проверьте почту». `revalidatePath` где применимо. Пароли и сессии не логировать.",
+        "testStrategy": "Невалидные данные — ошибки формы; валидный signUp получает сообщение проверки почты; в Supabase Auth появляется пользователь.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "zod-схема регистрации и UI формы",
+            "description": "Shadcn Form + ошибки пользователю.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Пароль короче 8 — ошибка.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Server Action signUp с server Supabase",
+            "description": "Без клиентского SSR ключа сервиса.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Успешный вызов — ответ приложения без stack trace клиенту.",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:02:35.371Z"
+      },
+      {
+        "id": "17",
+        "title": "Вход: /login, signInWithPassword, кнопка «Выйти»",
+        "description": "Форма email/пароль, редирект на главную после успеха, понятные ошибки.",
+        "status": "done",
+        "dependencies": [
+          "13",
+          "15"
+        ],
+        "priority": "high",
+        "details": "`login/page.tsx`, `login-form.tsx`, action `signIn` с `signInWithPassword`. Успех — redirect `/`. Ошибки аутентификации показать текстом под формой. В шапке layout-кнопка `signOut` через Supabase или action. После мутаций `revalidatePath('/')`.",
+        "testStrategy": "Неверный пароль показывает сообщение; успешный вход ведёт на `/` и шапку с выходом; выход возвращает к гостевому состоянию.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "login-form + валидация zod базовых полей",
+            "description": "",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Пустые поля — ошибки.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "signOut и интеграция в header",
+            "description": "`supabase.auth.signOut()` из корректного клиента/action.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "После signOut главная недоступна когда включена защита (отдельная задача).",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:02:35.371Z"
+      },
+      {
+        "id": "18",
+        "title": "Social Login Google/GitHub и auth/callback",
+        "description": "Кнопки OAuth на login/register + route handler колбэка.",
+        "status": "done",
+        "dependencies": [
+          "13",
+          "16",
+          "17"
+        ],
+        "priority": "medium",
+        "details": "`components/auth/social-buttons.tsx` вызывает `signInWithOAuth({ provider })` для `google` и `github`. `src/app/auth/callback/route.ts` обрабатывает code exchange по гайду Supabase App Router.",
+        "testStrategy": "Полный поток OAuth в dev (при настроенных провайдерах) возвращает залогиненного пользователя на сайт без 500.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "UI кнопок на /login и /register",
+            "description": "",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Клик начинает редирект на провайдера.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Route handler GET auth/callback",
+            "description": "Обмен кода за сессию, redirect домой или на error route.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Успешный callback ставит cookie сессии.",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:02:35.371Z"
+      },
+      {
+        "id": "19",
+        "title": "Защита страниц через middleware редиректы",
+        "description": "Только авторизованные на `/`; гости с `/login`/`/register` на `/`.",
+        "status": "done",
+        "dependencies": [
+          "15",
+          "17"
+        ],
+        "priority": "high",
+        "details": "Расширить middleware после `updateSession`: читать пользователя из Supabase-клиента; маршруты с данными (`/`, при необходимости `/dashboard`) требуют сессию — иначе `redirect('/login')`. Для уже залогиненных доступ к `/login` и `/register` → `redirect('/')`. Matcher не конфликтует с `auth/callback`.",
+        "testStrategy": "Инкогнито: главная перенаправляет на `/login`. После логина главная доступна. Залогиненный `/login` уходит на `/`.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Список публичных и приватных путей",
+            "description": "Явное правило как в PRD.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Ручная проверка каждого пути из PRD.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "getUser после updateSession",
+            "description": "Не рассинхронизировать чтение сессии.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Свеже созданная сессия видна в том же middleware-цепочке.",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:02:35.371Z"
+      },
+      {
+        "id": "20",
+        "title": "Колонка user_id в transactions и установка только из сессии",
+        "description": "Связь строк с auth.users + изменение Server/API слоя приложения.",
+        "status": "done",
+        "dependencies": [
+          "19",
+          "3",
+          "4",
+          "8",
+          "9",
+          "10"
+        ],
+        "priority": "high",
+        "details": "Миграция: `user_id uuid` references `auth.users(id)` с индексом. Backfill или очистка тестовых данных по политике команды. В `actions.ts`/API при INSERT использовать `supabase.auth.getUser()`/`getSession` только на сервере — `user_id` никогда из тела формы. SELECT/UI показывает только фильтрацию клиентом временно; финальную изоляцию гарантирует RLS (след. задача). Обновить TypeScript типы и zod: не принимать `user_id` из пользовательского ввода.",
+        "testStrategy": "Новые транзакции в БД имеют `user_id` текущего юзера; подмена id в теле формы игнорируется сервером.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "SQL миграция Supabase для user_id",
+            "description": "Файл в `supabase/migrations/` и применить.",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Таблица в редакторе имеет столбец, FK без ошибки.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "INSERT/UPDATE/DELETE только с серверным user id",
+            "description": "",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Две учётные записи не видят чужих UUID в ставке insert.",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:02:35.371Z"
+      },
+      {
+        "id": "21",
+        "title": "RLS на transactions: только свои строки (auth.uid = user_id)",
+        "description": "Заменить открытые политики модуля 6 на боевые.",
+        "status": "done",
+        "dependencies": [
+          "20"
+        ],
+        "priority": "high",
+        "details": "Удалить/отключить старые политики anon all. Новые для authenticated: SELECT/INSERT/UPDATE/DELETE где `auth.uid() = user_id`. Убедиться, что после логина RLS допускает CRUD только к своим uuid.",
+        "testStrategy": "Из SQL-под второго пользователя нет строк первого; чтение главной приложением показывает только свои.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Откат учебных политик модуля 6",
+            "description": "",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Нет permissive всех строк для anon если не задумано.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Четыре политики USING/CHECK как в PRD",
+            "description": "",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Policy names ясные; включить RLS on.",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:02:35.371Z"
+      },
+      {
+        "id": "22",
+        "title": "Регрессия: REST API транзакций и список на главной с RLS",
+        "description": "GET/POST/PATCH/DELETE /api/transactions только в контексте текущего пользователя.",
+        "status": "done",
+        "dependencies": [
+          "20",
+          "21",
+          "12"
+        ],
+        "priority": "medium",
+        "details": "Route handlers должны использовать Supabase-сессию (cookies), не обходить RLS через service role. Проверить Thunder Client или e2e: анон без cookie — ошибка доступа или пустота; авторизованный — только свои записи. `revalidatePath` после мутаций остаётся. Дополнительно документировать ограничения «не делать» из секции PRD.",
+        "testStrategy": "Два браузера/профеля — два непересекающихся набора транзакций; API коды корректны.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Привязать API handlers к клиентской сессии",
+            "description": "",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Без авторизации мутации не проходят.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Сквозной smoke-тест UI + Thunder Client",
+            "description": "",
+            "status": "done",
+            "dependencies": [],
+            "testStrategy": "Чеклист из PRD «главные функции» выполнен.",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:02:35.371Z"
+      },
+      {
+        "id": "23",
+        "title": "Миграция profiles: роль user/admin + связь с auth.users",
+        "description": "Таблица public.profiles и значение по умолчанию user.",
+        "status": "pending",
+        "dependencies": [
+          "22"
+        ],
+        "priority": "high",
+        "details": "SQL: profiles (user_id uuid PK FK auth.users ON DELETE CASCADE, role text с check user|admin, default user, created_at). Триггер при signup или backfill. RLS на profiles: пользователь читает свою строку; смена роли admin — через сервер.",
+        "testStrategy": "Миграция в Supabase; новый пользователь получает profile.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "DDL и политики",
+            "description": "",
+            "status": "pending",
+            "dependencies": [],
+            "testStrategy": "SQL без ошибок.",
+            "parentId": "undefined"
+          },
+          {
+            "id": 2,
+            "title": "Строка profile при регистрации",
+            "description": "",
+            "status": "pending",
+            "dependencies": [],
+            "testStrategy": "После signUp есть строка в profiles.",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:18:43.950Z"
+      },
+      {
+        "id": "24",
+        "title": "Переменные ADMIN_EMAIL и SUPABASE_SERVICE_ROLE_KEY",
+        "description": "Только сервер; обновить .env.example.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "details": "ADMIN_EMAIL — email админа (trim, lower). SUPABASE_SERVICE_ROLE_KEY не в NEXT_PUBLIC. Документировать в .env.example.",
+        "testStrategy": "Service role не попадает в клиентский импорт.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": ".env.example без секретов",
+            "description": "",
+            "status": "pending",
+            "dependencies": [],
+            "testStrategy": "",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:18:43.950Z"
+      },
+      {
+        "id": "25",
+        "title": "lib/supabase/admin.ts — клиент с service role (только сервер)",
+        "description": "createAdminClient для Auth Admin API.",
+        "status": "pending",
+        "dependencies": [
+          "24"
+        ],
+        "priority": "high",
+        "details": "createClient из @supabase/supabase-js с service role; не импортировать из client components.",
+        "testStrategy": "Импорт только из server actions / server-only модулей.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T17:18:43.950Z"
+      },
+      {
+        "id": "26",
+        "title": "Проверка админа и role=admin для ADMIN_EMAIL",
+        "description": "Утилита isAdmin + sync profiles.",
+        "status": "pending",
+        "dependencies": [
+          "23",
+          "25",
+          "24"
+        ],
+        "priority": "high",
+        "details": "Сравнение email сессии с ADMIN_EMAIL; upsert profiles.role=admin. Финальная проверка на страницах admin.",
+        "testStrategy": "Под admin email — доступ; под другим — нет.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T17:18:43.950Z"
+      },
+      {
+        "id": "27",
+        "title": "Защита /admin: layout или server guard",
+        "description": "Только админы видят раздел.",
+        "status": "pending",
+        "dependencies": [
+          "26"
+        ],
+        "priority": "high",
+        "details": "app/admin/layout.tsx: getUser + isAdmin; иначе redirect или notFound.",
+        "testStrategy": "Не-админ не видит контент админки.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T17:18:43.950Z"
+      },
+      {
+        "id": "28",
+        "title": "Страница /admin/users — список через Admin API",
+        "description": "Email, дата регистрации, статус бана.",
+        "status": "pending",
+        "dependencies": [
+          "25",
+          "27"
+        ],
+        "priority": "high",
+        "details": "Server Component; listUsers; shadcn table. Без утечки service key на клиент.",
+        "testStrategy": "Список совпадает с Dashboard → Users.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Таблица UI",
+            "description": "",
+            "status": "pending",
+            "dependencies": [],
+            "testStrategy": "",
+            "parentId": "undefined"
+          }
+        ],
+        "updatedAt": "2026-05-14T17:18:43.950Z"
+      },
+      {
+        "id": "29",
+        "title": "Server Actions: бан и разбан пользователя",
+        "description": "Нельзя забанить себя.",
+        "status": "pending",
+        "dependencies": [
+          "28"
+        ],
+        "priority": "high",
+        "details": "adminUsers.ts: zod для user_id; ban/unban через admin client.",
+        "testStrategy": "Бан блокирует вход; разбан восстанавливает.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T17:18:43.950Z"
+      },
+      {
+        "id": "30",
+        "title": "Удаление пользователя + confirm; каскад транзакций",
+        "description": "deleteUser в Auth; FK CASCADE.",
+        "status": "pending",
+        "dependencies": [
+          "28"
+        ],
+        "priority": "high",
+        "details": "Запрет удалить себя. Диалог confirm. Проверить ON DELETE CASCADE для transactions.user_id.",
+        "testStrategy": "Пользователь удалён из Auth; данные каскадом.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T17:18:43.950Z"
+      },
+      {
+        "id": "31",
+        "title": "Аудит: service role не в клиентском бандле",
+        "description": "Сборка и при необходимости grep.",
+        "status": "pending",
+        "dependencies": [
+          "25",
+          "29",
+          "30"
+        ],
+        "priority": "medium",
+        "details": "npm run build; убедиться что admin.ts не в client chunks.",
+        "testStrategy": "Сборка ок; нет импорта admin client в client.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T17:18:43.950Z"
+      },
+      {
+        "id": "32",
+        "title": "Сквозной тест модуля 8 по PRD-3",
+        "description": "Критерии приёмки.",
+        "status": "pending",
+        "dependencies": [
+          "27",
+          "28",
+          "29",
+          "30",
+          "31"
+        ],
+        "priority": "medium",
+        "details": "Два аккаунта: админ управляет тестовым пользователем; обычный не открывает /admin/users.",
+        "testStrategy": "Чеклист из PRD-3.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T17:18:43.950Z"
+      },
+      {
+        "id": "33",
+        "title": "Модуль 9 (PRD-4): типы темы, цикл и localStorage",
+        "description": "themeId light|dark|fallout|mario, порядок переключения, ключ хранилища.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "details": "Добавить `src/lib/theme.ts` (или рядом): константа ключа LS, `THEME_ORDER` строго Light→Dark→Fallout→Mario, функции `getNextTheme`, `readStoredTheme`, `writeStoredTheme`, `resolveInitialTheme` (если нет LS — опционально `prefers-color-scheme` для light/dark только). Экспорт типов для провайдера.",
+        "testStrategy": "Юнит или ручной вызов в консоли: цикл из 5 шагов возвращает к light.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T18:30:00.000Z"
+      },
+      {
+        "id": "34",
+        "title": "Модуль 9: CSS-переменные для четырёх тем в globals.css",
+        "description": "Один набор семантических токенов shadcn на каждую `[data-theme]`.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "details": "В `src/app/globals.css`: `:root` или `[data-theme=\"light\"]` = текущий светлый вид без регрессий; `[data-theme=\"dark\"]` — нейтральная тёмная; `[data-theme=\"fallout\"]` — тёмный фон, зелёный акцент, читаемые карточки/бордеры; `[data-theme=\"mario\"]` — яркие акценты, скругления через токены. Добавить при необходимости `--font-display`/акцентные переменные. Класс или токен для денежных сумм с повышенным контрастом во всех темах.",
+        "testStrategy": "В DevTools переключить data-theme на html вручную — UI не ломается.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T18:30:00.000Z"
+      },
+      {
+        "id": "35",
+        "title": "Модуль 9: ThemeProvider и анти-FOUC в root layout",
+        "description": "Context, применение `data-theme` к documentElement, синхронизация с LS.",
+        "status": "pending",
+        "dependencies": [
+          "33",
+          "34"
+        ],
+        "priority": "high",
+        "details": "Клиентский `ThemeProvider` (`src/components/theme-provider.tsx`): state themeId, на mount читать LS (и согласованный initial из inline-скрипта), `document.documentElement.setAttribute('data-theme', id)`. В `src/app/layout.tsx`: минимальный inline script до контента (читает LS и/или matchMedia для первого paint), затем обёртка провайдером для деревьев, где нужна тема. Избежать заметного мигания.",
+        "testStrategy": "Hard refresh: тема сразу соответствует сохранённой; смена темы обновляет html.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T18:30:00.000Z"
+      },
+      {
+        "id": "36",
+        "title": "Модуль 9: кнопка-переключатель с иконкой солнца",
+        "description": "Один контрол, цикл по клику и с клавиатуры.",
+        "status": "pending",
+        "dependencies": [
+          "35",
+          "43"
+        ],
+        "priority": "high",
+        "details": "Компонент (shadcn Button ghost/size icon): иконка Sun (lucide), по клику вызывает cycle; поддержка Enter/Space; `aria-label` с указанием текущей темы или «Переключить тему». Допускается смена иконки по теме, но одна кнопка в одном слоте UI.",
+        "testStrategy": "Клик 4 раза — возврат к исходной теме; фокус и клавиатура работают.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T18:30:00.000Z"
+      },
+      {
+        "id": "37",
+        "title": "Модуль 9: встроить переключатель в общий layout / header",
+        "description": "Виден на главной, auth и админке (единая шапка или общий layout).",
+        "status": "pending",
+        "dependencies": [
+          "36"
+        ],
+        "priority": "high",
+        "details": "Разместить `ThemeToggle` в существующей шапке или `layout.tsx` рядом с навигацией/меню пользователя. Не дублировать провайдер. Убедиться, что на `/login`, `/register`, `/admin/*` тема тоже применяется.",
+        "testStrategy": "Проход по маршрутам: кнопка на месте, тема общая.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T18:30:00.000Z"
+      },
+      {
+        "id": "38",
+        "title": "Модуль 9: шрифты Fallout/Mario через next/font",
+        "description": "Акцентные семейства без заметного CLS.",
+        "status": "pending",
+        "dependencies": [
+          "34"
+        ],
+        "priority": "medium",
+        "details": "Подключить один моноширинный шрифт для заголовков/акцента Fallout и один округлый display для Mario (Google Fonts или system fallback). Задать CSS-переменные и использовать в `[data-theme=\"fallout\"]` / `[data-theme=\"mario\"]`. `font-display: swap`, основной текст таблиц остаётся читаемым.",
+        "testStrategy": "Lighthouse CLS в норме; таблица транзакций читается в mario/fallout.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T18:30:00.000Z"
+      },
+      {
+        "id": "39",
+        "title": "Модуль 9: визуальный слой Fallout (декор без перегруза)",
+        "description": "Сетка, vignette, лёгкий шум; техничный вид контролов через токены.",
+        "status": "pending",
+        "dependencies": [
+          "37",
+          "38"
+        ],
+        "priority": "medium",
+        "details": "Для `[data-theme=\"fallout\"]`: фоновый паттерн/псевдоэлементы (opacity низкая), тонкие рамки инпутов и кнопок. Без звука и видео. Не снижать контраст чисел баланса.",
+        "testStrategy": "Долгая сессия в теме Fallout — глаза не «режет»; суммы видны.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T18:30:00.000Z"
+      },
+      {
+        "id": "40",
+        "title": "Модуль 9: анимации и «приколы» Mario + reduced-motion",
+        "description": "CSS-first микроанимации; опционально праздник при успешном сохранении.",
+        "status": "pending",
+        "dependencies": [
+          "37"
+        ],
+        "priority": "medium",
+        "details": "Keyframes для hover кнопок, лёгкая пружина primary CTA. `@media (prefers-reduced-motion: reduce)` — отключить или свести к opacity. Опционально v1: confetti/звёзда после успешного submit транзакции (только клиент, без тяжёлых canvas). Пасхалки не перекрывать клики таблицы.",
+        "testStrategy": "Системная настройка reduced motion — анимации почти нет; сохранение транзакции не ломается.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T18:30:00.000Z"
+      },
+      {
+        "id": "41",
+        "title": "Модуль 9: аудит хардкода цветов в UI транзакций",
+        "description": "Токены вместо фиксированных цветов.",
+        "status": "pending",
+        "dependencies": [
+          "37"
+        ],
+        "priority": "high",
+        "details": "Пройти `transactions-board`, `transaction-form-dialog`, `transaction-list`, `balance-summary` и смежные компоненты: заменить `text-gray-*`, произвольные hex/rgb на классы из темы (shadcn semantic). Диалоги и скроллбары согласованы со всеми четырьмя темами.",
+        "testStrategy": "Поиск по src на подозрительные цвета; визуально все 4 темы на главной.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T18:30:00.000Z"
+      },
+      {
+        "id": "42",
+        "title": "Модуль 9: сквозной тест по критериям PRD-4",
+        "description": "Чеклист приёмки редизайна и мультитемы.",
+        "status": "pending",
+        "dependencies": [
+          "39",
+          "40",
+          "41",
+          "43"
+        ],
+        "priority": "medium",
+        "details": "Проверить: цикл Light→Dark→Fallout→Mario; персистентность LS; главная+диалоги+auth во всех темах; нет заметного FOUC; reduced-motion; линтер/типы. Опционально: e2e assertion `document.documentElement.dataset.theme`.",
+        "testStrategy": "Чеклист из раздела «Критерии приёмки» в prd-4.md.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T18:30:00.000Z"
+      },
+      {
+        "id": "43",
+        "title": "Модуль 9: shadcn CLI для новых UI-кусочков и согласованности с базой",
+        "description": "Подключать и обновлять компоненты через CLI проекта, не копировать вручную с сайта.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "details": "Руководствоваться официальной документацией CLI: https://ui.shadcn.com/docs/cli — для любых новых примитивов мультитемы (кнопка переключателя, dropdown, sonner и т.д.) использовать `npx shadcn@latest add <имя>` (или `pnpm dlx` / `bunx` по стеку репо) с учётом `components.json` и путей проекта. При необходимости выровнять токены с пресетом: `shadcn apply <preset> --only theme` или `--only font`, без переустановки всего UI. Не добавлять компоненты вручную с ui.shadcn.com, если их можно поставить через `add`. После `add` убедиться, что классы используют CSS variables из globals.",
+        "testStrategy": "`npx shadcn@latest info` / список компонентов в `src/components/ui` соответствует тому, что ставилось через CLI; новые зависимости в package.json осмысленны.",
+        "subtasks": [],
+        "updatedAt": "2026-05-14T19:00:00.000Z"
       }
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-05-12T17:20:20.331Z",
-      "taskCount": 12,
-      "completedCount": 12,
+      "lastModified": "2026-05-14T19:00:00.000Z",
+      "taskCount": 43,
+      "completedCount": 22,
       "tags": [
         "master"
       ]

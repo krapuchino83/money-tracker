@@ -3,26 +3,33 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 
 import { addTransaction, updateTransaction } from "@/app/actions";
+import { PaymentAmountFields } from "@/components/payment-amount-fields";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { PaymentCurrency } from "@/lib/nbrb/types";
 import type { Transaction } from "@/lib/types";
 import { TRANSACTION_CATEGORIES } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 function todayInputValue(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
 type Props = {
-  /** When true, dialog opens on mount (e.g. empty-state link `/?add=1`). */
   autoOpen?: boolean;
+  /** Встроенная кнопка в панель журнала (фильтры + действия). */
+  integrated?: boolean;
 };
 
-export function TransactionFormDialog({ autoOpen }: Props) {
+export function TransactionFormDialog({ autoOpen, integrated }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [paymentCurrency, setPaymentCurrency] = useState<PaymentCurrency>("RUB");
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [transactionDate, setTransactionDate] = useState(todayInputValue());
 
   useEffect(() => {
     if (autoOpen) {
@@ -32,26 +39,40 @@ export function TransactionFormDialog({ autoOpen }: Props) {
 
   return (
     <>
-      <Button type="button" onClick={() => dialogRef.current?.showModal()}>
+      <Button
+        type="button"
+        size={integrated ? "sm" : "default"}
+        className={cn(
+          "rounded-full shadow-sm",
+          integrated ? "h-9 px-4" : "px-5",
+        )}
+        onClick={() => dialogRef.current?.showModal()}
+      >
         + Добавить
       </Button>
 
       <dialog
         ref={dialogRef}
-        className="fixed inset-0 m-auto w-[min(100%-2rem,28rem)] rounded-xl border border-border bg-background p-0 shadow-lg backdrop:bg-black/40 open:flex open:flex-col"
+        className="fixed inset-0 z-[100] m-auto w-[min(100%-2rem,28rem)] rounded-2xl border border-border/60 bg-card/95 p-0 shadow-2xl ring-1 ring-foreground/[0.06] backdrop:bg-black/45 backdrop:backdrop-blur-[2px] open:flex open:flex-col"
       >
-        <div className="border-b border-border px-4 py-3">
-          <h2 className="text-lg font-semibold">Новая транзакция</h2>
+        <div className="border-b border-border/60 px-5 py-4">
+          <h2 className="font-display text-lg tracking-tight">Новая транзакция</h2>
+          <p className="text-muted-foreground mt-1 text-xs">
+            Курс НБРБ запрашивается при сохранении; на счёт зачисляются ₽.
+          </p>
         </div>
         <form
           ref={formRef}
-          className="flex flex-col gap-4 p-4"
+          className="flex flex-col gap-4 p-5"
           action={(fd) => {
             setError(null);
             startTransition(async () => {
               const res = await addTransaction(fd);
               if (res.ok) {
                 formRef.current?.reset();
+                setPaymentCurrency("RUB");
+                setPaymentAmount("");
+                setTransactionDate(todayInputValue());
                 dialogRef.current?.close();
               } else {
                 const msg =
@@ -77,10 +98,13 @@ export function TransactionFormDialog({ autoOpen }: Props) {
             </div>
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="amount">Сумма</Label>
-            <Input id="amount" name="amount" type="number" min={1} step="0.01" required />
-          </div>
+          <PaymentAmountFields
+            paymentCurrency={paymentCurrency}
+            onPaymentCurrencyChange={setPaymentCurrency}
+            paymentAmount={paymentAmount}
+            onPaymentAmountChange={setPaymentAmount}
+            transactionDate={transactionDate}
+          />
 
           <div className="grid gap-2">
             <Label htmlFor="category">Категория</Label>
@@ -106,7 +130,14 @@ export function TransactionFormDialog({ autoOpen }: Props) {
 
           <div className="grid gap-2">
             <Label htmlFor="date">Дата</Label>
-            <Input id="date" name="date" type="date" required defaultValue={todayInputValue()} />
+            <Input
+              id="date"
+              name="date"
+              type="date"
+              required
+              value={transactionDate}
+              onChange={(e) => setTransactionDate(e.target.value)}
+            />
           </div>
 
           {error ? <p className="text-destructive text-sm">{error}</p> : null}
@@ -140,21 +171,23 @@ export function EditTransactionDialog({ transaction, onClose }: EditProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [paymentCurrency, setPaymentCurrency] = useState<PaymentCurrency>("RUB");
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [transactionDate, setTransactionDate] = useState(todayInputValue());
 
   useEffect(() => {
     const el = dialogRef.current;
-    if (!el) {
-      return;
-    }
-    const onDialogClose = () => {
-      onClose();
-    };
+    if (!el) return;
+    const onDialogClose = () => onClose();
     el.addEventListener("close", onDialogClose);
     return () => el.removeEventListener("close", onDialogClose);
   }, [onClose]);
 
   useEffect(() => {
     if (transaction) {
+      setPaymentCurrency(transaction.payment_currency);
+      setPaymentAmount(String(transaction.payment_amount));
+      setTransactionDate(transaction.date);
       dialogRef.current?.showModal();
     } else {
       dialogRef.current?.close();
@@ -168,15 +201,15 @@ export function EditTransactionDialog({ transaction, onClose }: EditProps) {
   return (
     <dialog
       ref={dialogRef}
-      className="fixed inset-0 m-auto w-[min(100%-2rem,28rem)] rounded-xl border border-border bg-background p-0 shadow-lg backdrop:bg-black/40 open:flex open:flex-col"
+      className="fixed inset-0 z-[100] m-auto w-[min(100%-2rem,28rem)] rounded-2xl border border-border/60 bg-card/95 p-0 shadow-2xl ring-1 ring-foreground/[0.06] backdrop:bg-black/45 backdrop:backdrop-blur-[2px] open:flex open:flex-col"
     >
-      <div className="border-b border-border px-4 py-3">
-        <h2 className="text-lg font-semibold">Редактирование</h2>
+      <div className="border-b border-border/60 px-5 py-4">
+        <h2 className="font-display text-lg tracking-tight">Редактирование</h2>
       </div>
       <form
         key={transaction.id}
         ref={formRef}
-        className="flex flex-col gap-4 p-4"
+        className="flex flex-col gap-4 p-5"
         action={(fd) => {
           setError(null);
           startTransition(async () => {
@@ -221,18 +254,14 @@ export function EditTransactionDialog({ transaction, onClose }: EditProps) {
           </div>
         </div>
 
-        <div className="grid gap-2">
-          <Label htmlFor="edit-amount">Сумма</Label>
-          <Input
-            id="edit-amount"
-            name="amount"
-            type="number"
-            min={1}
-            step="0.01"
-            required
-            defaultValue={transaction.amount}
-          />
-        </div>
+        <PaymentAmountFields
+          idPrefix="edit-"
+          paymentCurrency={paymentCurrency}
+          onPaymentCurrencyChange={setPaymentCurrency}
+          paymentAmount={paymentAmount}
+          onPaymentAmountChange={setPaymentAmount}
+          transactionDate={transactionDate}
+        />
 
         <div className="grid gap-2">
           <Label htmlFor="edit-category">Категория</Label>
@@ -263,7 +292,14 @@ export function EditTransactionDialog({ transaction, onClose }: EditProps) {
 
         <div className="grid gap-2">
           <Label htmlFor="edit-date">Дата</Label>
-          <Input id="edit-date" name="date" type="date" required defaultValue={transaction.date} />
+          <Input
+            id="edit-date"
+            name="date"
+            type="date"
+            required
+            value={transactionDate}
+            onChange={(e) => setTransactionDate(e.target.value)}
+          />
         </div>
 
         {error ? <p className="text-destructive text-sm">{error}</p> : null}

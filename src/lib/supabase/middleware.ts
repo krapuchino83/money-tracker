@@ -1,35 +1,45 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
+import type { User } from "@supabase/supabase-js";
+
 import { getSupabaseAnonKey, getSupabaseUrl } from "./env";
 
-export async function updateSession(request: NextRequest) {
+export type UpdateSessionResult = {
+  response: NextResponse;
+  user: User | null;
+};
+
+/**
+ * Refreshes the auth session and returns the response with updated Set-Cookie headers.
+ * @see https://supabase.com/docs/guides/auth/server-side/nextjs
+ */
+export async function updateSession(request: NextRequest): Promise<UpdateSessionResult> {
   const url = getSupabaseUrl();
   const key = getSupabaseAnonKey();
 
   if (!url || !key) {
-    return NextResponse.next({ request });
+    return { response: NextResponse.next({ request }), user: null };
   }
 
-  const supabaseResponse = NextResponse.next({ request });
+  let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(url, key, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
       },
-      setAll(cookiesToSet, headers) {
+      setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options }) => {
           supabaseResponse.cookies.set(name, value, options);
-        });
-        Object.entries(headers).forEach(([h, v]) => {
-          supabaseResponse.headers.set(h, v);
         });
       },
     },
   });
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  return supabaseResponse;
+  return { response: supabaseResponse, user };
 }
